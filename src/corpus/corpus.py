@@ -1,6 +1,6 @@
 from abc import ABC
 from pathlib import Path
-from typing import List, Dict, Set, Counter
+from typing import Dict, Counter
 
 
 class Corpus(ABC):

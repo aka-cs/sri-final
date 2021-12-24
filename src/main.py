@@ -9,6 +9,6 @@ if __name__ == '__main__':
     
     mri = VectorMRI(corpus)
     
-    q = Query('')
+    q = Query('1663 1841 1842')
     
     print(mri.query(q))

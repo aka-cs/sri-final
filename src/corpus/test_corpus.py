@@ -1,6 +1,5 @@
 from collections import Counter
 from pathlib import Path
-from typing import Dict
 
 from src.corpus.corpus import Corpus
 
@@ -18,5 +17,5 @@ class TestCorpus(Corpus):
             
             for w in set(words):
                 self.vocabulary[w] = self.vocabulary.get(w, 0) + 1
-        
-            self.documents[doc.name] = Counter(words)
+            
+            self.documents[str(doc.resolve().as_posix())] = Counter(words)

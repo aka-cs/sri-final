@@ -1,6 +1,5 @@
 import math
 from collections import Counter
-from pathlib import Path
 from typing import List, Tuple
 
 from src.corpus.corpus import Corpus
@@ -18,6 +17,9 @@ class VectorMRI(MRI):
         self.process_corpus()
 
     def query(self, query: Query) -> List[Tuple[str, float]]:
+        
+        assert len(query.text) != 0
+        
         w = self.process_query(query)
         
         docs = []
@@ -82,11 +84,11 @@ class VectorMRI(MRI):
         
         assert len(doc_w) == len(query_w)
     
-        numerator = 0
-        for i in range(len(doc_w)):
-            numerator += doc_w[i] * query_w[i]
-            
-        denominator = self.norm_2(doc_w) + self.norm_2(query_w)
+        numerator = sum(map(lambda x: x[0] * x[1], zip(doc_w, query_w)))
+        
+        denominator = self.norm_2(doc_w) * self.norm_2(query_w)
+        
+        assert denominator != 0
         
         return numerator/denominator
 
