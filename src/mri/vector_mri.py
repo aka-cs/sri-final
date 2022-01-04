@@ -1,5 +1,5 @@
 import math
-from collections import Counter
+import nltk
 from typing import List, Tuple
 
 from src.corpus.corpus import Corpus
@@ -12,86 +12,59 @@ class VectorMRI(MRI):
     def __init__(self, corpus: Corpus, smoothing: int = 0.4):
         super().__init__(corpus)
         self.smoothing = smoothing
-        self.tf = {}
-        self.idf = {}
-        self.process_corpus()
+        # self.process_corpus()
 
     def query(self, query: Query) -> List[Tuple[str, float]]:
         
-        assert len(query.text) != 0
+        if self.corpus.stemmer:
+            words = [self.corpus.stemmer.stem(w) for w in query.words]
+        else:
+            words = query.words
+        query_counter = nltk.Counter(words)
+        ranking = []
         
-        w = self.process_query(query)
-        
-        docs = []
-        for doc in self.corpus.documents.keys():
-            docs.append((doc, self.sim(self.vec_doc(doc), w)))
+        for id, doc in self.corpus.documents.items():
+    
+            num = 0
+            doc_weights_sqr = 0
+            query_weights_sqr = 0
+            for word in query_counter.keys():
+                if word not in self.corpus.vocabulary:
+                    continue
+                w_doc = self.weight_doc(word, id)
+                w_query = self.weight_query(word, query_counter)
+                num += w_doc * w_query
+                doc_weights_sqr += w_doc ** 2
+                query_weights_sqr += w_query ** 2
+
+            try:
+                sim = num / (math.sqrt(doc_weights_sqr) * math.sqrt(query_weights_sqr))
+            except ZeroDivisionError:
+                sim = 0
             
-        docs.sort(key=lambda x: x[1], reverse=True)
-        
-        return docs
+            if sim > 0.3:
+                ranking.append((id, sim))
 
-    def process_corpus(self) -> None:
-        self.tf = self.calculate_tf()
-        self.idf = self.calculate_idf()
+        ranking.sort(key=lambda x: x[1], reverse=True)
         
-    def process_query(self, query: Query) -> List[float]:
-        w = []
-        N = len(self.corpus.documents.keys())
-        counter = Counter(query)
-        max_count = counter.most_common(1)[0][1]
-        
-        for word in self.corpus.vocabulary.keys():
-            if counter[word] == 0:
-                w.append(0)
-                continue
-            
-            n_i = self.corpus.vocabulary[word]
-            w_i = (self.smoothing + (1 - self.smoothing)*counter[word]/max_count) * math.log(N/n_i)
-            w.append(w_i)
-        
-        return w
+        return ranking
 
-    def calculate_tf(self):
-        tf = {}
-    
-        for doc, counter in self.corpus.documents.items():
-            max_count = counter.most_common(1)[0][1]
-        
-            for word in self.corpus.vocabulary.keys():
-                tf[word, doc] = (counter[word] / max_count)
+    def weight_query(self, ti: str, query_vect: nltk.Counter):
+        freq = query_vect[ti]
+        max_freq = query_vect.most_common(1)[0][1]
+        tf = freq / max_freq
+        idf = self.idf(ti)
+        return (self.smoothing + (1 - self.smoothing) * tf) * idf
 
-        return tf
-    
-    def calculate_idf(self):
-        idf = {}
-        N = len(self.corpus.documents.keys())
-        
-        for word, n_i in self.corpus.vocabulary.items():
-            idf[word] = math.log(N / n_i)
-        
-        return idf
-    
-    def w(self, word: str, doc: str):
-        return self.tf[word, doc] * self.idf[word]
+    def weight_doc(self, ti: str, dj: str) -> float:
+        return self.tf(ti, dj) * self.idf(ti)
 
-    def vec_doc(self, doc: str):
-        doc_w = []
-        for word in self.corpus.vocabulary.keys():
-            doc_w.append(self.w(word, doc))
-        return doc_w
+    def tf(self, ti: str, dj: str) -> float:
+        freq = self.corpus.get_frequency(ti, dj)
+        max_freq_tok, max_freq = self.corpus.get_max_frequency(dj)
+        return freq / max_freq
 
-    def sim(self, doc_w: List[float], query_w: List[float]):
-        
-        assert len(doc_w) == len(query_w)
-    
-        numerator = sum(map(lambda x: x[0] * x[1], zip(doc_w, query_w)))
-        
-        denominator = self.norm_2(doc_w) * self.norm_2(query_w)
-        
-        assert denominator != 0
-        
-        return numerator/denominator
-
-    @staticmethod
-    def norm_2(w: List[float]):
-        return math.sqrt(sum(map(lambda x: x**2, w)))
+    def idf(self, ti: str) -> float:
+        N = len(self.corpus.documents)
+        ni = self.corpus.vocabulary[ti]
+        return math.log(N / ni)
