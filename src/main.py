@@ -6,6 +6,9 @@ from src.corpus.test_corpus import TestCorpus
 from src.mri.vector_mri import VectorMRI
 
 
+
+
+
 def terminal_main():
     
     # corpus = CranCorpus(Path('../resources/corpus/cran').resolve(), stemming=True)
@@ -47,12 +50,13 @@ def web_main():
         
     print("App running on port : {} ".format(port))
     
+    app.debug = True
     app.run(host="localhost", port=port)
 
 
 if __name__ == '__main__':
     
-    flask = False
+    flask = True
     
     if flask:
         web_main()

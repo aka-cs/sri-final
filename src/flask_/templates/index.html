@@ -38,14 +38,14 @@
   <body>
     
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Company name</a>
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">MRI Corpus</a>
   <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+  <input class="form-control form-control-dark w-100" type="text" id="search-bar" placeholder="Search" aria-label="Search">
   <div class="navbar-nav">
-    <div class="nav-item text-nowrap">
-      <a class="nav-link px-3" href="#">Sign out</a>
+    <div class="nav-item text-nowrap" id="search-button">
+      <a class="nav-link px-3" href="#">Search</a>
     </div>
   </div>
 </header>
@@ -54,230 +54,192 @@
   <div class="row">
     <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
       <div class="position-sticky pt-3">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">
-              <span data-feather="home"></span>
-              Dashboard
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file"></span>
-              Orders
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="shopping-cart"></span>
-              Products
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="users"></span>
-              Customers
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="bar-chart-2"></span>
-              Reports
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="layers"></span>
-              Integrations
-            </a>
-          </li>
-        </ul>
-
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-          <span>Saved reports</span>
-          <a class="link-secondary" href="#" aria-label="Add a new report">
-            <span data-feather="plus-circle"></span>
-          </a>
-        </h6>
-        <ul class="nav flex-column mb-2">
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Current month
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Last quarter
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Social engagement
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">
-              <span data-feather="file-text"></span>
-              Year-end sale
-            </a>
-          </li>
+        <ul class="nav flex-column" id="corpusList">
         </ul>
       </div>
     </nav>
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Dashboard</h1>
-        <div class="btn-toolbar mb-2 mb-md-0">
-          <div class="btn-group me-2">
-            <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
-            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
-          </div>
-          <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-            <span data-feather="calendar"></span>
-            This week
-          </button>
-        </div>
+        <h1 class="h2" id="results-header">Make your query !!!</h1>
+        <p id="pagination-index"></p>
       </div>
 
-      <h2>Section title</h2>
-      <div class="table-responsive">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Header</th>
-              <th scope="col">Header</th>
-              <th scope="col">Header</th>
-              <th scope="col">Header</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1,001</td>
-              <td>random</td>
-              <td>data</td>
-              <td>placeholder</td>
-              <td>text</td>
-            </tr>
-            <tr>
-              <td>1,002</td>
-              <td>placeholder</td>
-              <td>irrelevant</td>
-              <td>visual</td>
-              <td>layout</td>
-            </tr>
-            <tr>
-              <td>1,003</td>
-              <td>data</td>
-              <td>rich</td>
-              <td>dashboard</td>
-              <td>tabular</td>
-            </tr>
-            <tr>
-              <td>1,003</td>
-              <td>information</td>
-              <td>placeholder</td>
-              <td>illustrative</td>
-              <td>data</td>
-            </tr>
-            <tr>
-              <td>1,004</td>
-              <td>text</td>
-              <td>random</td>
-              <td>layout</td>
-              <td>dashboard</td>
-            </tr>
-            <tr>
-              <td>1,005</td>
-              <td>dashboard</td>
-              <td>irrelevant</td>
-              <td>text</td>
-              <td>placeholder</td>
-            </tr>
-            <tr>
-              <td>1,006</td>
-              <td>dashboard</td>
-              <td>illustrative</td>
-              <td>rich</td>
-              <td>data</td>
-            </tr>
-            <tr>
-              <td>1,007</td>
-              <td>placeholder</td>
-              <td>tabular</td>
-              <td>information</td>
-              <td>irrelevant</td>
-            </tr>
-            <tr>
-              <td>1,008</td>
-              <td>random</td>
-              <td>data</td>
-              <td>placeholder</td>
-              <td>text</td>
-            </tr>
-            <tr>
-              <td>1,009</td>
-              <td>placeholder</td>
-              <td>irrelevant</td>
-              <td>visual</td>
-              <td>layout</td>
-            </tr>
-            <tr>
-              <td>1,010</td>
-              <td>data</td>
-              <td>rich</td>
-              <td>dashboard</td>
-              <td>tabular</td>
-            </tr>
-            <tr>
-              <td>1,011</td>
-              <td>information</td>
-              <td>placeholder</td>
-              <td>illustrative</td>
-              <td>data</td>
-            </tr>
-            <tr>
-              <td>1,012</td>
-              <td>text</td>
-              <td>placeholder</td>
-              <td>layout</td>
-              <td>dashboard</td>
-            </tr>
-            <tr>
-              <td>1,013</td>
-              <td>dashboard</td>
-              <td>irrelevant</td>
-              <td>text</td>
-              <td>visual</td>
-            </tr>
-            <tr>
-              <td>1,014</td>
-              <td>dashboard</td>
-              <td>illustrative</td>
-              <td>rich</td>
-              <td>data</td>
-            </tr>
-            <tr>
-              <td>1,015</td>
-              <td>random</td>
-              <td>tabular</td>
-              <td>information</td>
-              <td>text</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <ul id="results-list" class="list-group list-group-flush">
+
+      </ul>
+
+      <nav aria-label="...">
+        <ul class="pagination" id="pagination">
+
+        </ul>
+      </nav>
+
     </main>
   </div>
 </div>
 
+    <script>
+
+      let currentCorpus = "default";
+      let paginationCorpus = "default";
+      let currentQuery = "";
+      let defaultPagination = {
+        'page': 0,
+        'count': 10,
+        'total': 0
+      }
+      let pagination = {
+        'page': defaultPagination.page,
+        'count': defaultPagination.count,
+        'total': defaultPagination.total
+      }
+      let corpus;
+
+      function httpGetAsync(theUrl, callback)
+      {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+          if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
+            callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("GET", theUrl, true); // true for asynchronous
+        xmlHttp.send(null);
+      }
+
+      function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
+
+      function CreateDocHTML(document) {
+        console.log(document)
+        return `<h1>${capitalize(document.title)}</h1>
+                <p>${document.text}</p>`
+      }
+
+      function makeSearch(query, page, count) {
+        httpGetAsync(`api/corpus/${paginationCorpus}?q=${query}&page=${page}`+
+                `&count=${count}`, (response) => {
+          let resultList = document.getElementById("results-list");
+
+          resultList.innerHTML = ''
+
+          response = JSON.parse(response);
+          results = response.results;
+          pagination.page = response.page;
+          pagination.count = response.count;
+          pagination.total = response.total;
+
+          makePagination(response.page, response.count, response.total)
+
+          for (const doc of results) {
+            let li = document.createElement("li");
+            li.className = "list-group-item";
+            li.innerHTML = CreateDocHTML(doc[0]);
+            resultList.appendChild(li);
+          }
+        })
+      }
+
+      function clickSearch($event) {
+        let searchBar = document.getElementById("search-bar");
+        let query = searchBar.value;
+        if (query === "") { return null; }
+        currentQuery = query;
+        paginationCorpus = currentCorpus;
+        makeSearch(query, defaultPagination.page, defaultPagination.count)
+      }
+
+      let searchButton = document.getElementById("search-button");
+      searchButton.onclick = clickSearch
+
+      function clickCorpus($event) {
+        let corpusList = document.getElementById("corpusList");
+
+        for (const corpusItem of corpusList.children) {
+          let aTag = corpusItem.getElementsByTagName("a")[0]
+          if (aTag === $event.target) {
+            aTag.classList.add('active');
+            currentCorpus = aTag.id.slice("list-item-".length);
+          } else {
+            aTag.classList.remove('active');
+          }
+        }
+      }
+
+      function makePagination(page, count, total) {
+        let total_pages = Math.floor((total / count) + 1)
+
+        console.log(page, count, total, total_pages)
+
+        let paginationList = document.getElementById("pagination");
+
+        paginationList.innerHTML = '';
+
+        if (total_pages !== 1) {
+          let li = document.createElement("li");
+          li.innerHTML = `<a class="page-link" href="#">Previous</a>`
+          li.className = "page-item"
+          if (page === 0) li.classList.add("disabled")
+          else li.onclick = () => {makeSearch(currentQuery, pagination.page - 1, pagination.count)}
+          paginationList.appendChild(li)
+
+          for (let i = Math.max(0, page - 7); i < Math.min(page + 8, total_pages); i++) {
+            let li = document.createElement("li");
+            li.innerHTML = `<a class="page-link" href="#">${i + 1}</a>`
+            li.className = "page-item"
+            li.setAttribute("aria-current", "page")
+            if (page === i) li.classList.add("active")
+            else li.onclick = () => {makeSearch(currentQuery, i, pagination.count)}
+            paginationList.appendChild(li)
+          }
+
+          li = document.createElement("li");
+          li.innerHTML = `<a class="page-link" href="#">Next</a>`
+          li.className = "page-item"
+          if (page === total_pages - 1) li.classList.add("disabled")
+          else li.onclick = () => {makeSearch(currentQuery, pagination.page + 1, pagination.count)}
+          paginationList.appendChild(li)
+        }
+
+        var paginationIndex = document.getElementById("pagination-index")
+
+        paginationIndex.innerHTML = `Showing ${page * count + 1} to ${Math.min(page * count + count, total)} of ${total} results`
+
+      }
+
+      httpGetAsync('/api/corpus', (response) => {
+        // import {feather} from "../assets/cdn/feather.min";
+        'use strict'
+
+        let corpusList = document.getElementById("corpusList");
+
+        let dict = JSON.parse(response)
+
+        let i = 0;
+        for (const key in dict) {
+          if (i === 0) currentCorpus = key;
+          let name = dict[key];
+          let li = document.createElement("li");
+          li.innerHTML = `
+            <a class="nav-link ${key === currentCorpus ? 'active' : ''}"
+            aria-current="page" href="#" id="list-item-${key}">
+              <span data-feather="file-text"></span>
+              ${name}
+            </a>`;
+          li.className = "nav-item"
+          li.onclick = clickCorpus;
+          corpusList.appendChild(li);
+          i++;
+        }
+
+        feather.replace({ 'aria-hidden': 'true' })
+      })
+    </script>
 
     <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script src="../assets/cdn/feather.min.js"></script>
     <script src="../assets/dashboard/dashboard.js"></script>
   </body>
 </html>

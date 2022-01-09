@@ -4,18 +4,23 @@ import re
 import nltk
 from nltk.corpus import stopwords, wordnet
 
-from src.corpus.corpus import Corpus
+from src.corpus.corpus import Corpus, Document
 from src.corpus.query import Query
 from src.corpus.utils import tokenize
 
 
-@dataclass
-class CranDocument:
-    id: str
-    title: str
-    author: str
-    bibliography: str
-    words: str
+class CranDocument(Document):
+    
+    def __init__(self, id, title, author, bibliography, text):
+        super().__init__(id, title, author, text)
+        self.bibliography = bibliography
+
+    def to_dict(self):
+        dic = super(CranDocument, self).to_dict()
+        dic.update({
+            'bibliography': self.bibliography
+        })
+        return dic
 
 
 class CranQuery(Query):
@@ -43,24 +48,28 @@ class CranCorpus(Corpus):
         with open(doc_file, 'r') as f:
             doc_text = f.read()
             
-        reg = re.compile(r'.I +(?P<id>\d+) *\n'
-                         r'.T *\n'
-                         r'(?P<title>(?:.|\n)+?)'
-                         r'.A *\n'
-                         r'(?P<author>(?:.|\n)+?)'
-                         r'.B *\n'
-                         r'(?P<bibliography>(?:.|\n)+?)'
-                         r'.W *\n'
-                         r'(?P<words>(?:.|\n)+?)'
-                         r'(?=.I)')
+        reg = re.compile(r'\.I +(?P<id>\d+) *\n'
+                         r'\.T *\n'
+                         r'(?P<title>(?:.|\n)*?)'
+                         r'\.A *\n'
+                         r'(?P<author>(?:.|\n)*?)'
+                         r'\.B *\n'
+                         r'(?P<bibliography>(?:.|\n)*?)'
+                         r'\.W *\n'
+                         r'(?P<words>(?:.|\n)*?)'
+                         r'(?=\.I|$)')
         
         docs = reg.findall(doc_text)
+        
         docs = list(map(lambda x: CranDocument(*x), docs))
         for doc in docs:
-            doc_text = '\n'.join([doc.title, doc.author, doc.bibliography, doc.words])
+            doc_text = '\n'.join([doc.title, doc.author, doc.bibliography, doc.text])
             words = tokenize(doc_text, self.language, self.stemmer)
+            
+            if not words:
+                continue
             
             for w in set(words):
                 self.vocabulary[w] = self.vocabulary.get(w, 0) + 1
 
-            self.documents[doc.id] = nltk.Counter(words)
+            self.documents[doc] = nltk.Counter(words)

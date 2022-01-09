@@ -1,7 +1,7 @@
 from collections import Counter
 from pathlib import Path
 
-from src.corpus.corpus import Corpus
+from src.corpus.corpus import Corpus, Document
 from src.corpus.utils import tokenize
 
 
@@ -11,11 +11,17 @@ class TestCorpus(Corpus):
         super().__init__(path, 'test', 'english', stemming)
 
     def process_corpus(self):
-        for doc in self.path.glob('*.txt'):
-            with open(doc, 'r') as f:
-                words = tokenize(f.read(), self.language, self.stemmer)
+        for doc_path in self.path.glob('*.txt'):
+            
+            with open(doc_path, 'r') as f:
+                document = Document(doc_path.resolve().as_posix(),
+                                    doc_path.name,
+                                    doc_path.resolve().as_posix(),
+                                    f.read())
+            
+            words = tokenize(document.text, self.language, self.stemmer)
             
             for w in set(words):
                 self.vocabulary[w] = self.vocabulary.get(w, 0) + 1
             
-            self.documents[str(doc.resolve().as_posix())] = Counter(words)
+            self.documents[document] = Counter(words)
