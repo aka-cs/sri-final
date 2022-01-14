@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from flask import Flask, render_template, send_from_directory, jsonify, request
@@ -54,6 +55,16 @@ def send_query_answer(key):
         'total': len(results),
         'results': paginated_results,
     })
+
+
+@app.route('/api/feedback', methods=['POST'])
+def feedback():
+    dic = json.loads(request.data.decode())
+    query = dic.get('query')
+    docs = dic.get('docs')
+    corpus = dic.get('corpus')
+    mri = get_mri(corpus, True)
+    return jsonify(mri.feedback(query, docs))
 
 
 @app.route('/')

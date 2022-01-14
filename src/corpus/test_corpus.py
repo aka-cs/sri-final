@@ -21,6 +21,9 @@ class TestCorpus(Corpus):
             
             words = tokenize(document.text, self.language, self.stemmer)
             
+            if not words:
+                continue
+            
             for w in set(words):
                 self.vocabulary[w] = self.vocabulary.get(w, 0) + 1
             

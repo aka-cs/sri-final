@@ -2,11 +2,24 @@ body {
   font-size: .875rem;
 }
 
-.feather {
-  width: 16px;
-  height: 16px;
-  vertical-align: text-bottom;
+.feather-star {
+  height: auto;
+  width: auto;
+  vertical-align: baseline;
 }
+
+.star-span {
+  cursor: pointer;
+}
+
+.star-span:hover polygon {
+  color: blue;
+}
+
+.star-span-important:hover polygon {
+  color: black;
+}
+
 
 /*
  * Sidebar
@@ -25,6 +38,13 @@ body {
   padding: 48px 0 0; /* Height of navbar */
   box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 }
+
+.sidebar .feather {
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+}
+
 
 @media (max-width: 767.98px) {
   .sidebar {

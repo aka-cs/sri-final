@@ -23,19 +23,6 @@ class CranDocument(Document):
         return dic
 
 
-class CranQuery(Query):
-    
-    def __init__(self, id, text):
-        super().__init__(text)
-        self.id = id
-        
-    def __repr__(self):
-        return f'{self.id}: {self.words}'
-    
-    def __str__(self):
-        return repr(self)
-
-
 class CranCorpus(Corpus):
     
     def __init__(self, path: Path, stemming=False):

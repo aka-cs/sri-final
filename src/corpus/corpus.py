@@ -51,6 +51,8 @@ class Corpus(ABC):
             self.vocabulary: Dict[str, int] = {}
             self.process_corpus()
             self.save_indexed_corpus()
+            
+        self.id2doc = {doc.id: doc for doc in self.documents.keys()}
         
     @abstractmethod
     def process_corpus(self):
@@ -69,8 +71,8 @@ class Corpus(ABC):
         pickle.dump(self.documents, open(indexed_corpus_path / f'docs{stemmed}.pkl', 'wb'))
         pickle.dump(self.vocabulary, open(indexed_corpus_path / f'vocab{stemmed}.pkl', 'wb'))
 
-    def get_frequency(self, tok_id: str, doc_id: Document) -> int:
-        vector = self.documents[doc_id]
+    def get_frequency(self, tok_id: str, doc: Document) -> int:
+        vector = self.documents[doc]
         try:
             return vector[tok_id]
         except KeyError:

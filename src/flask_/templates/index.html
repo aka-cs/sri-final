@@ -69,9 +69,11 @@
 
       </ul>
 
-      <nav aria-label="...">
-        <ul class="pagination" id="pagination">
-
+      <nav aria-label="..." class="mb-3 mt-3">
+        <div class="float-end">
+          <button type="button" class="btn btn-primary" hidden id="feedback-btn">Send Feedback</button>
+        </div>
+        <ul class="pagination" id="pagination" style="">
         </ul>
       </nav>
 
@@ -80,7 +82,6 @@
 </div>
 
     <script>
-
       let currentCorpus = "default";
       let paginationCorpus = "default";
       let currentQuery = "";
@@ -95,6 +96,8 @@
         'total': defaultPagination.total
       }
       let corpus;
+      let results;
+      let importantDocuments = {};
 
       function httpGetAsync(theUrl, callback)
       {
@@ -107,23 +110,61 @@
         xmlHttp.send(null);
       }
 
+      function httpPostAsync(theUrl, data, callback) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+          console.log(xmlHttp.readyState)
+          console.log(xmlHttp.status)
+          if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
+            callback(xmlHttp.responseText);
+        }
+        xmlHttp.open("POST", theUrl, true); // true for asynchronous
+        xmlHttp.send(JSON.stringify(data));
+      }
+
       function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
       }
 
-      function CreateDocHTML(document) {
-        console.log(document)
-        return `<h1>${capitalize(document.title)}</h1>
-                <p>${document.text}</p>`
+      function starClick(doc_id) {
+        console.log(`Me llamaron con el documento ${doc_id}`)
+        importantDocuments[doc_id] = !importantDocuments[doc_id];
+        renderResultList(false);
+      }
+
+      function CreateDocHTML(document, ranking) {
+        // console.log(document)
+        return `<div>
+                    <p><span class="h2">
+                    <span class="star-span"><i class="feather-star" href="#" style="color: ${importantDocuments[document.id] ? 'blue': 'black'}" data-feather="star"></i></span>
+                    ${capitalize(document.title)}</span>${document.id}<span></span></p>
+                    <p>${document.text}</p>
+                    <p>${ranking}</p>
+                </div>`
+      }
+
+      function renderResultList(newPage=true) {
+        let resultList = document.getElementById("results-list");
+        resultList.innerHTML = ''
+
+        for (const doc of results) {
+          let li = document.createElement("li");
+          li.className = "list-group-item";
+          li.innerHTML = CreateDocHTML(doc[0], doc[1]);
+          resultList.appendChild(li);
+          let star_span = li.getElementsByClassName('star-span')[0];
+          star_span.onclick = () => {starClick(doc[0].id)}
+          if (newPage) { importantDocuments[doc[0].id] = false; }
+        }
+
+        feather.replace({ 'aria-hidden': 'true' })
       }
 
       function makeSearch(query, page, count) {
+        'use strict'
+
         httpGetAsync(`api/corpus/${paginationCorpus}?q=${query}&page=${page}`+
                 `&count=${count}`, (response) => {
-          let resultList = document.getElementById("results-list");
-
-          resultList.innerHTML = ''
-
           response = JSON.parse(response);
           results = response.results;
           pagination.page = response.page;
@@ -132,12 +173,9 @@
 
           makePagination(response.page, response.count, response.total)
 
-          for (const doc of results) {
-            let li = document.createElement("li");
-            li.className = "list-group-item";
-            li.innerHTML = CreateDocHTML(doc[0]);
-            resultList.appendChild(li);
-          }
+          importantDocuments = {};
+          renderResultList()
+
         })
       }
 
@@ -206,7 +244,25 @@
 
         paginationIndex.innerHTML = `Showing ${page * count + 1} to ${Math.min(page * count + count, total)} of ${total} results`
 
+        var feedbackBtn = document.getElementById('feedback-btn')
+
+        feedbackBtn.hidden = false;
+
       }
+
+      function sendFeedback() {
+        httpPostAsync('api/feedback',
+                {
+                  'query': currentQuery,
+                  'docs': importantDocuments,
+                  'corpus': currentCorpus
+                }, (response) => {
+          makeSearch(currentQuery, pagination.page, pagination.count)
+        });
+      }
+
+      let feedbackBtn = document.getElementById('feedback-btn')
+      feedbackBtn.onclick = sendFeedback
 
       httpGetAsync('/api/corpus', (response) => {
         // import {feather} from "../assets/cdn/feather.min";
